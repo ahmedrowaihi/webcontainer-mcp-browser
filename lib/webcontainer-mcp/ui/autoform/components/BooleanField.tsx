@@ -13,7 +13,6 @@ export const BooleanField: React.FC<AutoFormFieldProps> = ({
     <Checkbox
       id={id}
       onCheckedChange={(checked) => {
-        // react-hook-form expects an event object
         const event = {
           target: {
             name: field.key,

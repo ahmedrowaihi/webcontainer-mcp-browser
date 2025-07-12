@@ -8,7 +8,7 @@ export const ArrayElementWrapper: React.FC<ArrayElementWrapperProps> = ({
   onRemove,
 }) => {
   return (
-    <div className="relative mt-2 p-4 border rounded-md">
+    <div className="relative mt-2 p-4 border">
       <Button
         onClick={onRemove}
         variant="ghost"

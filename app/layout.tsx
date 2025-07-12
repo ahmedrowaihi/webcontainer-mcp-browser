@@ -1,5 +1,6 @@
-import { LLMBubble } from "@/lib/webcontainer-mcp/llm";
+import { ThemeProvider } from "@/components/theme-provider";
 import type { Metadata } from "next";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -15,11 +16,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
-      <body className="h-svh">
-        {children}
-        <LLMBubble />
-      </body>
-    </html>
+    <>
+      <html lang="en" suppressHydrationWarning>
+        <body className="h-svh">
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="dark"
+            enableSystem={false}
+            disableTransitionOnChange
+          >
+            {children}
+            <Toaster />
+          </ThemeProvider>
+        </body>
+      </html>
+    </>
   );
 }

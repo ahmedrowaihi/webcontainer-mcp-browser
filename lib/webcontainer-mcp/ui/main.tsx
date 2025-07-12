@@ -2,9 +2,7 @@
 import { ZodProvider } from "@autoform/zod";
 import { useMemo } from "react";
 import { z } from "zod";
-import indexJs from "../mcp-server/index.js?raw";
-import packageJson from "../mcp-server/package.json?raw";
-import { useWebContainerMcp } from "../use-webcontainer-mcp";
+import { useMCP } from "../use-mcp";
 import { mcpjsonSchemaToZodSchema } from "../util/json-to-zod";
 import { MCPConfig } from "./mcp-config";
 import { McpServerControl } from "./mcp-server-control";
@@ -25,7 +23,7 @@ export function WebContainerDashboard() {
     handleListTools,
     handleCallTool,
     setOutput,
-  } = useWebContainerMcp({ packageJson, indexJs });
+  } = useMCP();
 
   const handleStartConfig = async (processConfig?: {
     command: string;
@@ -69,16 +67,26 @@ export function WebContainerDashboard() {
   }, [tools]);
 
   return (
-    <div className="flex flex-col gap-2 mx-auto p-2 h-[90vh] container">
-      <McpServerControl
-        status={status}
-        toolCount={tools.length}
-        onStart={handleStartConfig}
-        onStop={stopServer}
-      />
-      <div className="flex flex-row flex-wrap flex-1 gap-4 py-2 w-full min-w-0 h-full min-h-0">
-        <div className="flex flex-col flex-1 gap-4 min-w-0 h-full min-h-0">
+    <div className="flex flex-col gap-4 mx-auto p-4 w-full max-w-7xl min-h-screen">
+      <div className="top-0 z-10 sticky flex flex-col gap-4">
+        <McpServerControl
+          status={status}
+          toolCount={tools.length}
+          onStart={handleStartConfig}
+          onStop={stopServer}
+        />
+      </div>
+
+      <div className="flex-1 gap-4 grid grid-cols-1 lg:grid-cols-2 lg:grid-rows-2 lg:h-[calc(100vh-200px)] min-h-[80vh]">
+        <div className="lg:h-full lg:max-h-full lg:overflow-hidden">
           <MCPConfig status={status} onSubmit={handleStartConfig} />
+        </div>
+
+        <div className="lg:h-full lg:max-h-full lg:overflow-hidden">
+          <ToolOutput toolName={activeToolName} output={activeToolResult} />
+        </div>
+
+        <div className="lg:h-full lg:max-h-full lg:overflow-hidden">
           <McpToolList
             toolForms={toolForms}
             onCallTool={handleCallTool}
@@ -86,14 +94,9 @@ export function WebContainerDashboard() {
             disabled={status !== "running"}
           />
         </div>
-        <div className="flex flex-col flex-1 gap-4 min-w-0 h-full min-h-0">
-          <div className="bg-muted p-4 rounded-md h-1/2 min-h-[120px] overflow-auto">
-            <h2 className="mb-2 font-semibold text-lg">Tool Output</h2>
-            <ToolOutput toolName={activeToolName} output={activeToolResult} />
-          </div>
-          <div className="flex-1 min-w-0 h-1/2 min-h-[120px] overflow-auto">
-            <McpSystemLog output={output} onClear={() => setOutput("")} />
-          </div>
+
+        <div className="lg:h-full lg:max-h-full lg:overflow-hidden">
+          <McpSystemLog output={output} onClear={() => setOutput("")} />
         </div>
       </div>
     </div>

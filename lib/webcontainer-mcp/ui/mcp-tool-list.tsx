@@ -68,8 +68,8 @@ export function McpToolList({
   const activeTool = toolForms.find((tool) => tool.name === selectedTool);
 
   return (
-    <Card>
-      <CardHeader>
+    <Card className="flex flex-col w-full h-full min-h-0 max-h-full overflow-hidden">
+      <CardHeader className="flex-shrink-0">
         <div className="flex justify-between items-center">
           <div>
             <CardTitle className="flex items-center gap-2">
@@ -89,21 +89,25 @@ export function McpToolList({
           </Button>
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="flex flex-col flex-1 min-h-0 max-h-full overflow-hidden">
         {toolForms.length > 0 ? (
-          <div className="space-y-4">
-            <ToolSelector
-              toolForms={toolForms}
-              selectedTool={selectedTool}
-              setSelectedTool={setSelectedTool}
-              disabled={disabled}
-            />
-            {activeTool ? (
-              <McpToolCard
-                key={activeTool.name}
-                tool={activeTool}
-                onCallTool={onCallTool}
+          <div className="flex flex-col flex-1 space-y-4 min-h-0 max-h-full overflow-hidden">
+            <div className="flex-shrink-0">
+              <ToolSelector
+                toolForms={toolForms}
+                selectedTool={selectedTool}
+                setSelectedTool={setSelectedTool}
+                disabled={disabled}
               />
+            </div>
+            {activeTool ? (
+              <div className="flex-1 min-h-0 max-h-[400px] overflow-y-auto">
+                <McpToolCard
+                  key={activeTool.name}
+                  tool={activeTool}
+                  onCallTool={onCallTool}
+                />
+              </div>
             ) : (
               <div className="text-muted-foreground text-sm">
                 Select a tool to view its form.

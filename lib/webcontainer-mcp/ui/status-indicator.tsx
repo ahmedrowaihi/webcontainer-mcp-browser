@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import React from "react";
-import { Status } from "../use-webcontainer-mcp";
+import type { Status } from "../use-mcp";
 
 const STATUS_COLORS: Record<string, string> = {
   running: "#22c55e",
@@ -18,30 +18,12 @@ const STATUS_COLORS: Record<string, string> = {
   mounting: "#a78bfa",
 };
 
-/**
- * Props for the StatusIndicator component.
- */
 export interface StatusIndicatorProps {
-  /**
-   * The current status string (case-insensitive).
-   * Examples: 'running', 'error', 'idle', 'booting', etc.
-   */
   status: Status;
-  /**
-   * Optional: override the label shown next to the indicator.
-   * If not provided, the status will be capitalized and used as the label.
-   */
   label?: string;
-  /**
-   * Optional: className for the wrapper span.
-   */
   className?: string;
 }
 
-/**
- * A colored, animated status indicator dot with a label.
- * Uses a color map and inline styles for full control.
- */
 export const StatusIndicator: React.FC<StatusIndicatorProps> = ({
   status,
   label,

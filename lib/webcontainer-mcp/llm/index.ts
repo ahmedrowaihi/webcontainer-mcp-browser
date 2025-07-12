@@ -1,1 +1,1 @@
-export * from "./llm";
+export { LLMBubble } from "./llm-bubble";
