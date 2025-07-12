@@ -11,7 +11,7 @@ export function MessageBubble({ message, index }: MessageBubbleProps) {
     <div
       key={index}
       className={cn(
-        "px-3 py-2",
+        "px-3 py-2 w-full",
         message.role === "user"
           ? "bg-primary text-primary-foreground"
           : message.role === "assistant"
