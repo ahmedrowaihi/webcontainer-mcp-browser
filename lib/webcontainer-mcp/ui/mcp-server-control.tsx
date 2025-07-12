@@ -6,12 +6,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Status } from "../use-webcontainer-mcp";
 import { StatusIndicator } from "./status-indicator";
 
 export interface McpServerControlProps {
-  status: string;
+  status: Status;
   toolCount: number;
-  onStart: () => void;
+  onStart: (processConfig?: {
+    command: string;
+    args: string[];
+    env?: Record<string, string>;
+  }) => void;
   onStop: () => void;
 }
 
@@ -35,15 +40,14 @@ export function McpServerControl({
         <div className="flex gap-2">
           {status !== "running" && (
             <Button
-              onClick={onStart}
+              onClick={() => onStart()}
               disabled={
-                status === "running" ||
                 status === "installing" ||
                 status === "booting" ||
                 status === "mounting"
               }
             >
-              Start Server
+              Run Default MCP Server
             </Button>
           )}
           {status === "running" && (

@@ -6,24 +6,39 @@ import indexJs from "../mcp-server/index.js?raw";
 import packageJson from "../mcp-server/package.json?raw";
 import { useWebContainerMcp } from "../use-webcontainer-mcp";
 import { mcpjsonSchemaToZodSchema } from "../util/json-to-zod";
+import { MCPConfig } from "./mcp-config";
 import { McpServerControl } from "./mcp-server-control";
 import { McpSystemLog } from "./mcp-system-log";
 import { McpToolList } from "./mcp-tool-list";
+import { ToolOutput } from "./tool-output";
 
 export function WebContainerDashboard() {
   const {
     status,
     output,
     tools,
-    toolResult,
+    activeToolResult,
+    activeToolName,
     startServer,
+    startServerFromNpm,
     stopServer,
     handleListTools,
     handleCallTool,
     setOutput,
   } = useWebContainerMcp({ packageJson, indexJs });
 
-  // Memoize all tool providers at once when tools change
+  const handleStartConfig = async (processConfig?: {
+    command: string;
+    args: string[];
+    env?: Record<string, string>;
+  }) => {
+    if (processConfig && processConfig.command && processConfig.args) {
+      await startServerFromNpm(processConfig);
+    } else {
+      await startServer();
+    }
+  };
+
   const toolForms = useMemo(() => {
     return tools.map((tool: any) => {
       let zodSchema: any = undefined;
@@ -58,12 +73,12 @@ export function WebContainerDashboard() {
       <McpServerControl
         status={status}
         toolCount={tools.length}
-        onStart={startServer}
+        onStart={handleStartConfig}
         onStop={stopServer}
       />
-      <div className="flex flex-row flex-wrap flex-1 gap-4 py-2 w-full h-full min-h-0">
-        {/* Left: Tools */}
-        <div className="flex-1">
+      <div className="flex flex-row flex-wrap flex-1 gap-4 py-2 w-full min-w-0 h-full min-h-0">
+        <div className="flex flex-col flex-1 gap-4 min-w-0 h-full min-h-0">
+          <MCPConfig status={status} onSubmit={handleStartConfig} />
           <McpToolList
             toolForms={toolForms}
             onCallTool={handleCallTool}
@@ -71,23 +86,12 @@ export function WebContainerDashboard() {
             disabled={status !== "running"}
           />
         </div>
-        {/* Right: Output + Logs */}
-        <div className="flex flex-col flex-1 gap-4 h-full min-h-0">
-          {/* Tool Output */}
+        <div className="flex flex-col flex-1 gap-4 min-w-0 h-full min-h-0">
           <div className="bg-muted p-4 rounded-md h-1/2 min-h-[120px] overflow-auto">
             <h2 className="mb-2 font-semibold text-lg">Tool Output</h2>
-            {toolResult.content ? (
-              <div className="text-sm">
-                <b>{toolResult.tool}:</b> {toolResult.content}
-              </div>
-            ) : (
-              <div className="text-muted-foreground text-sm">
-                No output yet.
-              </div>
-            )}
+            <ToolOutput toolName={activeToolName} output={activeToolResult} />
           </div>
-          {/* System Log */}
-          <div className="flex-1 h-1/2 min-h-[120px] overflow-auto">
+          <div className="flex-1 min-w-0 h-1/2 min-h-[120px] overflow-auto">
             <McpSystemLog output={output} onClear={() => setOutput("")} />
           </div>
         </div>

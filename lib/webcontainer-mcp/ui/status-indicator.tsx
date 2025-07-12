@@ -7,6 +7,7 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import React from "react";
+import { Status } from "../use-webcontainer-mcp";
 
 const STATUS_COLORS: Record<string, string> = {
   running: "#22c55e",
@@ -25,7 +26,7 @@ export interface StatusIndicatorProps {
    * The current status string (case-insensitive).
    * Examples: 'running', 'error', 'idle', 'booting', etc.
    */
-  status: string;
+  status: Status;
   /**
    * Optional: override the label shown next to the indicator.
    * If not provided, the status will be capitalized and used as the label.
