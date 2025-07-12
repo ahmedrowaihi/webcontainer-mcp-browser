@@ -2,9 +2,10 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "MCP Browser",
-  description: "MCP Browser",
-  generator: "MCP Browser",
+  title: "WebContainer MCP Browser",
+  description: "WebContainer MCP Browser",
+  generator: "WebContainer MCP Browser",
+  authors: [{ name: "Ahmed Rowaihi", url: "https://github.com/ahmedrowaihi" }],
 };
 
 export default function RootLayout({
@@ -13,7 +14,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body>{children}</body>
     </html>
   );
