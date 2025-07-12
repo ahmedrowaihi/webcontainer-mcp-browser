@@ -78,7 +78,6 @@ export function useWebContainerMcp({ packageJson, indexJs }: UseWebContainerMcpP
   const outputBuffer = useRef<string>("");
   const activeToolName = useRef<string | undefined>(undefined);
 
-  // Centralized output appending and ANSI stripping
   const appendOutput = useCallback((data: string) => {
     // Strip ANSI escape codes and control characters
     data = data.replace(/\x1b\[[0-9;]*[a-zA-Z]/g, '');

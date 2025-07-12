@@ -1,3 +1,4 @@
+import { LLMBubble } from "@/lib/webcontainer-mcp/llm";
 import type { Metadata } from "next";
 import "./globals.css";
 
@@ -15,7 +16,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body>{children}</body>
+      <body className="h-svh">
+        {children}
+        <LLMBubble />
+      </body>
     </html>
   );
 }
