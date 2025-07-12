@@ -1,14 +1,46 @@
 "use client";
-import React, { createContext, useContext } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import indexJs from "./mcp-server/index.js?raw";
 import packageJson from "./mcp-server/package.json?raw";
+import { DEFAULT_MODEL } from "./llm/models";
 
-type MCPContextType = ReturnType<typeof useWebContainerMcp> | null;
+type MCPContextType =
+  | (ReturnType<typeof useWebContainerMcp> & {
+      selectedModelId: string;
+      setSelectedModelId: (modelId: string) => void;
+    })
+  | null;
+
 const MCPContext = createContext<MCPContextType>(null);
 
 export function MCPProvider({ children }: { children: React.ReactNode }) {
   const mcp = useWebContainerMcp({ packageJson, indexJs });
-  return <MCPContext.Provider value={mcp}>{children}</MCPContext.Provider>;
+  const [selectedModelId, setSelectedModelId] = useState<string>(DEFAULT_MODEL);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("mcp-selected-model");
+      if (saved) {
+        setSelectedModelId(saved);
+      }
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("mcp-selected-model", selectedModelId);
+    } catch {}
+  }, [selectedModelId]);
+
+  const contextValue = {
+    ...mcp,
+    selectedModelId,
+    setSelectedModelId,
+  };
+
+  return (
+    <MCPContext.Provider value={contextValue}>{children}</MCPContext.Provider>
+  );
 }
 
 export function useMCP() {

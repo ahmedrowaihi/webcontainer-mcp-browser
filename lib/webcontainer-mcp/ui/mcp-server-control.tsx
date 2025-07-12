@@ -9,10 +9,13 @@ import {
 import type { Status } from "../use-mcp";
 import { StatusIndicator } from "./status-indicator";
 import { LLMBubble } from "../llm/llm-bubble";
+import { ModelSettingsModal } from "./model-settings-modal";
 
 export interface McpServerControlProps {
   status: Status;
   toolCount: number;
+  selectedModelId: string;
+  onModelChange: (modelId: string) => void;
   onStart: (processConfig?: {
     command: string;
     args: string[];
@@ -24,6 +27,8 @@ export interface McpServerControlProps {
 export function McpServerControl({
   status,
   toolCount,
+  selectedModelId,
+  onModelChange,
   onStart,
   onStop,
 }: McpServerControlProps) {
@@ -69,8 +74,13 @@ export function McpServerControl({
               </Button>
             )}
           </div>
-          <div className="w-full sm:w-auto">
+          <div className="flex items-center gap-2 w-full sm:w-auto">
             <LLMBubble />
+            <ModelSettingsModal
+              selectedModelId={selectedModelId}
+              onModelChange={onModelChange}
+              disabled={false}
+            />
           </div>
         </CardContent>
       </div>

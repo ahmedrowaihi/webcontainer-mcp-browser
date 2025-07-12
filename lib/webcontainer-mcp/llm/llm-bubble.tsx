@@ -26,6 +26,7 @@ import { useLLMEngine } from "./llm-engine";
 import { buildSystemPrompt } from "./system-prompt";
 import type { Message } from "./types";
 import { MessageBubble } from "./ui/message-bubble";
+import { getModelById } from "./models";
 
 const LOCAL_STORAGE_KEY = "llm-messages";
 
@@ -63,8 +64,10 @@ export function _LLMBubble() {
     handleListTools,
     status: mcpStatus,
     handleCallTool,
+    selectedModelId,
   } = useMCP();
-  const { createCompletion, progress, resetChat } = useLLMEngine();
+  const { createCompletion, progress, resetChat } =
+    useLLMEngine(selectedModelId);
 
   useEffect(() => {
     const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -81,16 +84,29 @@ export function _LLMBubble() {
   const handleOpenChange = useCallback(
     async (open: boolean) => {
       setOpen(open);
-      if (open) await handleListTools();
+      if (open && mcpStatus === "running") {
+        await handleListTools();
+      }
     },
-    [handleListTools]
+    [handleListTools, mcpStatus]
   );
-  useEffect(() => {
-    if (mcpStatus !== "running") setOpen(false);
-  }, [mcpStatus]);
 
   const systemPrompt = useMemo(() => buildSystemPrompt(tools), [tools]);
   const chat = useMemo(() => createCompletion, [createCompletion]);
+
+  const toolsTooltipContent = useMemo(() => {
+    if (tools.length === 0) return "No tools available";
+    if (tools.length <= 5) {
+      return tools.map((tool) => tool.name).join("\n");
+    }
+    const firstFive = tools.slice(0, 5).map((tool) => tool.name);
+    const remaining = tools.length - 5;
+    return `${firstFive.join("\n")}\n+${remaining} more`;
+  }, [tools]);
+
+  const currentModel = useMemo(() => {
+    return getModelById(selectedModelId);
+  }, [selectedModelId]);
 
   async function onSendMessage(input: string) {
     await handleSendMessage(
@@ -111,27 +127,15 @@ export function _LLMBubble() {
 
   return (
     <>
-      <div
-        onClick={(e) => {
-          e.stopPropagation();
-          if (mcpStatus !== "running") {
-            toast.error("MCP server must be running to use the AI Assistant");
-            return;
-          }
+      <Button
+        size="icon"
+        aria-label="Open AI Assistant"
+        onClick={() => {
+          handleOpenChange(!open);
         }}
       >
-        <Button
-          size="icon"
-          aria-label="Open AI Assistant"
-          data-enabled={mcpStatus === "running" ? "true" : "false"}
-          onClick={() => {
-            handleOpenChange(!open);
-          }}
-          disabled={mcpStatus !== "running"}
-        >
-          <span className="text-2xl">🤖</span>
-        </Button>
-      </div>
+        <span className="text-2xl">🤖</span>
+      </Button>
       <Sheet open={open} onOpenChange={handleOpenChange}>
         <SheetContent
           side="right"
@@ -143,18 +147,64 @@ export function _LLMBubble() {
             <div className="flex flex-row justify-between items-center gap-2">
               <div className="flex flex-col flex-1 items-start gap-2">
                 <SheetTitle>AI Assistant</SheetTitle>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Badge className="px-2 py-1 text-xs cursor-pointer">
-                        System Prompt
-                      </Badge>
-                    </TooltipTrigger>
-                    <TooltipContent className="text-xs whitespace-pre-wrap">
-                      {systemPrompt}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+                <div className="flex items-center gap-2">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Badge className="px-2 py-1 text-xs cursor-pointer">
+                          System Prompt
+                        </Badge>
+                      </TooltipTrigger>
+                      <TooltipContent className="text-xs whitespace-pre-wrap">
+                        {systemPrompt}
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Badge
+                          variant={
+                            mcpStatus === "running" ? "default" : "secondary"
+                          }
+                          className="px-2 py-1 text-xs cursor-pointer"
+                        >
+                          {mcpStatus === "running"
+                            ? `${tools.length} tools`
+                            : "Chat only"}
+                        </Badge>
+                      </TooltipTrigger>
+                      <TooltipContent className="text-xs whitespace-pre-wrap">
+                        {toolsTooltipContent}
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Badge
+                          variant="outline"
+                          className="px-2 py-1 text-xs cursor-pointer"
+                        >
+                          {currentModel?.name || "Unknown Model"}
+                        </Badge>
+                      </TooltipTrigger>
+                      <TooltipContent className="text-xs">
+                        <div className="space-y-1">
+                          <div className="font-medium">
+                            {currentModel?.name}
+                          </div>
+                          <div className="text-muted-foreground">
+                            Size: {currentModel?.size}
+                          </div>
+                          <div className="text-muted-foreground">
+                            {currentModel?.description}
+                          </div>
+                        </div>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
               </div>
               <div className="flex items-center gap-2">
                 <Button

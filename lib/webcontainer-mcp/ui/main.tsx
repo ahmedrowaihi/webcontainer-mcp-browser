@@ -23,6 +23,8 @@ export function WebContainerDashboard() {
     handleListTools,
     handleCallTool,
     setOutput,
+    selectedModelId,
+    setSelectedModelId,
   } = useMCP();
 
   const handleStartConfig = async (processConfig?: {
@@ -72,6 +74,8 @@ export function WebContainerDashboard() {
         <McpServerControl
           status={status}
           toolCount={tools.length}
+          selectedModelId={selectedModelId}
+          onModelChange={setSelectedModelId}
           onStart={handleStartConfig}
           onStop={stopServer}
         />
