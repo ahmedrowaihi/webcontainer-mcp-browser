@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import * as React from "react";
 import { cn } from "@/lib/utils";
 import { useImperativeHandle } from "react";
-import type { Status } from "../use-mcp";
+import type { Status } from "../hooks/use-mcp";
 
 interface MCPConfigProps {
   status: Status;

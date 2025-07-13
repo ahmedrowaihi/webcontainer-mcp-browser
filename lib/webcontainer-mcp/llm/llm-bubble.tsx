@@ -18,15 +18,14 @@ import {
 } from "@/components/ui/tooltip";
 import { Eraser, Loader } from "lucide-react";
 import { memo, useCallback, useEffect, useMemo, useState } from "react";
-import { toast } from "sonner";
-import { useMCP } from "../use-mcp";
+import { useMCP } from "../hooks/use-mcp";
 import { handleResetChat } from "./handlers/handle-reset-chat";
 import { handleSendMessage } from "./handlers/handle-send-message";
 import { useLLMEngine } from "./llm-engine";
+import { getModelById } from "./models";
 import { buildSystemPrompt } from "./system-prompt";
 import type { Message } from "./types";
 import { MessageBubble } from "./ui/message-bubble";
-import { getModelById } from "./models";
 
 const LOCAL_STORAGE_KEY = "llm-messages";
 

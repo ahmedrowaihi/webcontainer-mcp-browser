@@ -1,8 +1,7 @@
-import { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
-import React from "react";
+import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 
 interface ToolOutputProps {
-  toolName?: string;
+  toolName?: string | null;
   output?: CallToolResult;
 }
 

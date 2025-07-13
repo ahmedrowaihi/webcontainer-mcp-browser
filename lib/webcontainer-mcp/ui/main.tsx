@@ -2,7 +2,7 @@
 import { ZodProvider } from "@autoform/zod";
 import { useMemo } from "react";
 import { z } from "zod";
-import { useMCP } from "../use-mcp";
+import { useMCP } from "../hooks/use-mcp";
 import { mcpjsonSchemaToZodSchema } from "../util/json-to-zod";
 import { MCPConfig } from "./mcp-config";
 import { McpServerControl } from "./mcp-server-control";

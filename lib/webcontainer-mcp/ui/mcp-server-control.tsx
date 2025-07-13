@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { Status } from "../use-mcp";
+import type { Status } from "../hooks/use-mcp";
 import { StatusIndicator } from "./status-indicator";
 import { LLMBubble } from "../llm/llm-bubble";
 import { ModelSettingsModal } from "./model-settings-modal";
@@ -21,7 +21,7 @@ export interface McpServerControlProps {
     args: string[];
     env?: Record<string, string>;
   }) => void;
-  onStop: () => void;
+  onStop: () => Promise<void>;
 }
 
 export function McpServerControl({
@@ -64,7 +64,7 @@ export function McpServerControl({
             )}
             {status === "running" && (
               <Button
-                onClick={onStop}
+                onClick={() => onStop()}
                 disabled={status !== "running"}
                 variant="destructive"
                 size="sm"

@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import React from "react";
-import type { Status } from "../use-mcp";
+import type { Status } from "../hooks/use-mcp";
 
 const STATUS_COLORS: Record<string, string> = {
   running: "#22c55e",
