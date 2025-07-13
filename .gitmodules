@@ -1,0 +1,3 @@
+[submodule "lib/webcontainer-mcp/transport"]
+	path = lib/webcontainer-mcp/transport
+	url = https://github.com/ahmedrowaihi/webcontainer-mcp-transport.git
