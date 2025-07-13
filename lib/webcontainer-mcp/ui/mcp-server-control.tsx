@@ -84,6 +84,17 @@ export function McpServerControl({
           </div>
         </CardContent>
       </div>
+      <div className="mt-2 w-full text-muted-foreground text-xs text-left -translate-y-2 translate-x-2">
+        Made by <span className="font-semibold">sudorw</span> –{" "}
+        <a
+          href="https://github.com/ahmedrowaihi"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline"
+        >
+          @ahmedrowaihi
+        </a>
+      </div>
     </Card>
   );
 }
