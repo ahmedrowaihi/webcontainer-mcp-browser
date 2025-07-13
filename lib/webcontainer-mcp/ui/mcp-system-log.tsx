@@ -36,6 +36,16 @@ export function McpSystemLog({
         </p>
       </div>
       <div className="flex flex-col flex-1 bg-background min-h-0 max-h-full overflow-hidden">
+        <div className="flex flex-shrink-0 items-center gap-2 bg-muted px-4 py-2 border-t border-border text-xs">
+          <span className="text-primary text-xs select-none">sudorw</span>
+          <span className="text-accent text-xs select-none">~</span>
+          <button
+            className="ml-auto text-muted-foreground hover:text-destructive text-xs"
+            onClick={onClear}
+          >
+            Clear
+          </button>
+        </div>
         <div className="flex-1 min-h-0 max-h-[400px] overflow-hidden">
           <div className="p-4 h-full overflow-y-auto font-mono text-xs">
             <div className="space-y-2">
@@ -85,16 +95,6 @@ export function McpSystemLog({
               </TooltipProvider>
             </div>
           </div>
-        </div>
-        <div className="flex flex-shrink-0 items-center gap-2 bg-muted px-4 py-2 border-t border-border text-xs">
-          <span className="text-primary text-xs select-none">sudorw</span>
-          <span className="text-accent text-xs select-none">~</span>
-          <button
-            className="ml-auto text-muted-foreground hover:text-destructive text-xs"
-            onClick={onClear}
-          >
-            Clear
-          </button>
         </div>
       </div>
     </div>

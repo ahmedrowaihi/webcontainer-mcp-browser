@@ -8,7 +8,6 @@ import {
   SheetClose,
   SheetContent,
   SheetHeader,
-  SheetTitle,
 } from "@/components/ui/sheet";
 import {
   Tooltip,
@@ -26,6 +25,7 @@ import { getModelById } from "./models";
 import { buildSystemPrompt } from "./system-prompt";
 import type { Message } from "./types";
 import { MessageBubble } from "./ui/message-bubble";
+import { ModelSettingsModal } from "../ui/model-settings-modal";
 
 const LOCAL_STORAGE_KEY = "llm-messages";
 
@@ -64,6 +64,7 @@ export function _LLMBubble() {
     status: mcpStatus,
     handleCallTool,
     selectedModelId,
+    setSelectedModelId,
   } = useMCP();
   const { createCompletion, progress, resetChat } =
     useLLMEngine(selectedModelId);
@@ -145,12 +146,14 @@ export function _LLMBubble() {
           <SheetHeader className="p-4 border-b">
             <div className="flex flex-row justify-between items-center gap-2">
               <div className="flex flex-col flex-1 items-start gap-2">
-                <SheetTitle>AI Assistant</SheetTitle>
                 <div className="flex items-center gap-2">
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger asChild>
-                        <Badge className="px-2 py-1 text-xs cursor-pointer">
+                        <Badge
+                          className="px-2 py-1 text-xs cursor-pointer"
+                          style={{ borderRadius: 0 }}
+                        >
                           System Prompt
                         </Badge>
                       </TooltipTrigger>
@@ -167,6 +170,7 @@ export function _LLMBubble() {
                             mcpStatus === "running" ? "default" : "secondary"
                           }
                           className="px-2 py-1 text-xs cursor-pointer"
+                          style={{ borderRadius: 0 }}
                         >
                           {mcpStatus === "running"
                             ? `${tools.length} tools`
@@ -178,31 +182,10 @@ export function _LLMBubble() {
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Badge
-                          variant="outline"
-                          className="px-2 py-1 text-xs cursor-pointer"
-                        >
-                          {currentModel?.name || "Unknown Model"}
-                        </Badge>
-                      </TooltipTrigger>
-                      <TooltipContent className="text-xs">
-                        <div className="space-y-1">
-                          <div className="font-medium">
-                            {currentModel?.name}
-                          </div>
-                          <div className="text-muted-foreground">
-                            Size: {currentModel?.size}
-                          </div>
-                          <div className="text-muted-foreground">
-                            {currentModel?.description}
-                          </div>
-                        </div>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                  <ModelSettingsModal
+                    selectedModelId={selectedModelId}
+                    onModelChange={setSelectedModelId}
+                  />
                 </div>
               </div>
               <div className="flex items-center gap-2">

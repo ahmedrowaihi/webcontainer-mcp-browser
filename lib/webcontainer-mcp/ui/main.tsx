@@ -45,15 +45,24 @@ export function WebContainerDashboard() {
       try {
         zodSchema = mcpjsonSchemaToZodSchema(
           tool.inputSchema,
-          tool.inputSchema.required || [],
+          tool.inputSchema?.required || [],
           tool.name
         );
       } catch (e) {
         zodSchema = undefined;
       }
-      const isZodObject = zodSchema instanceof z.ZodObject;
+      // Add type guards before instanceof
+      const isZodObject =
+        zodSchema &&
+        typeof zodSchema === "object" &&
+        zodSchema instanceof z.ZodObject;
+      // Duck-type check for ZodEffects
       const isZodEffectsObject =
-        zodSchema instanceof z.ZodEffects &&
+        zodSchema &&
+        typeof zodSchema === "object" &&
+        zodSchema._def &&
+        zodSchema._def.effect !== undefined &&
+        zodSchema._def.schema &&
         zodSchema._def.schema instanceof z.ZodObject;
       let provider: ZodProvider<any> | undefined = undefined;
       if (isZodObject || isZodEffectsObject) {

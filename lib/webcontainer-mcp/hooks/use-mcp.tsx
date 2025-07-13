@@ -373,6 +373,8 @@ export function useWebContainerMcp({
           },
         };
 
+        appendOutput(JSON.stringify(callToolRequest));
+
         const responsePromise = new Promise<CallToolResult>(
           (resolve, reject) => {
             const timeout = setTimeout(() => {
@@ -387,12 +389,14 @@ export function useWebContainerMcp({
                 if ("result" in message && message.id === requestId) {
                   clearTimeout(timeout);
                   transportRef.current!.onmessage = originalOnMessage;
+                  appendOutput(JSON.stringify(message.result));
                   resolve(message.result as CallToolResult);
                 }
 
                 if ("error" in message && message.id === requestId) {
                   clearTimeout(timeout);
                   transportRef.current!.onmessage = originalOnMessage;
+                  appendOutput(JSON.stringify(message.error));
                   reject(
                     new Error(message.error.message || "Tool call failed")
                   );
@@ -417,7 +421,7 @@ export function useWebContainerMcp({
         throw error;
       }
     },
-    [setError]
+    [setError, appendOutput]
   );
 
   return {
