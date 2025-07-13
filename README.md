@@ -2,6 +2,8 @@
 
 **Run any Model Context Protocol (MCP) stdio server in your browser using WebContainers.**
 
+> **🔧 Developer Note**: This project includes a standalone [WebContainer MCP Transport](lib/webcontainer-mcp/transport/README.md) implementation that can be used independently in other projects. Check out the transport README for API documentation and usage examples!
+
 ---
 
 ## What is this?
