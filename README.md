@@ -2,7 +2,7 @@
 
 **Run any Model Context Protocol (MCP) stdio server in your browser using WebContainers.**
 
-> **🔧 Developer Note**: This project includes a standalone [WebContainer MCP Transport](lib/webcontainer-mcp/transport/README.md) implementation that can be used independently in other projects. Check out the transport README for API documentation and usage examples!
+> **🔧 Developer Note**: This project includes a standalone [WebContainer MCP Transport](https://github.com/ahmedrowaihi/webcontainer-mcp-transport) implementation that can be used independently in other projects. Check out the transport README for API documentation and usage examples!
 
 ---
 
@@ -32,7 +32,7 @@ It provides a beautiful, interactive dashboard for starting, stopping, and inter
 1. **Clone and install:**
 
    ```sh
-   git clone https://github.com/ahmedrowaihi/webcontainer-mcp-browser.git
+   git clone --recurse-submodules https://github.com/ahmedrowaihi/webcontainer-mcp-browser.git
    cd webcontainer-mcp-browser
    pnpm install
    pnpm dev
